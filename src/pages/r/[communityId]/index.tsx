@@ -1,8 +1,14 @@
-import { Community } from "@/pages/atoms/CommunitiesAtom";
+import { Community, communityState } from "@/pages/atoms/communitiesAtom";
+import CommunityNotFound from "@/pages/components/Community/CommunityNotFound";
+import CreatePostLink from "@/pages/components/Community/CreatePostLink";
+import Header from "@/pages/components/Community/Header";
+import PageContent from "@/pages/components/Layout/PageContent";
+import Posts from "@/pages/components/Posts/Posts";
 import { firestore } from "@/pages/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext } from "next";
-import React from "react";
+import React, { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 import safeJsonStringify from "safe-json-stringify";
 
 type CommunityPageProps = {
@@ -10,13 +16,38 @@ type CommunityPageProps = {
 };
 
 const CommunityPage = ({ communityData }: CommunityPageProps) => {
-  console.log('here is data', communityData); // missing a lot of data like shown here (only have ID) https://youtu.be/rDAdcZ2KdNg?t=3663
-  return <div> welcome to {communityData.id}</div>;
+  console.log("here is data", communityData); // missing a lot of data like shown here (only have ID) https://youtu.be/rDAdcZ2KdNg?t=3663
+  const setCommunityStateValue = useSetRecoilState(communityState);
+
+  if (!communityData) {
+    return <CommunityNotFound />;
+  }
+
+  useEffect(() => {
+    setCommunityStateValue((prev) => ({
+      ...prev,
+      currentCommunity: communityData,
+    }));
+  }, []);
+
+  return (
+    <>
+      <Header communityData={communityData} />
+      <PageContent>
+        <>
+          <CreatePostLink />
+          <Posts communityData={communityData} />
+        </>
+        <>
+          <div>RHS</div>
+        </>
+      </PageContent>
+    </>
+  );
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // get community data and pass it to client
-
   try {
     const communityDocRef = doc(
       firestore,
@@ -28,9 +59,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     return {
       props: {
-        communityData: JSON.parse(
-          safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
-        ),
+        communityData: communityDoc.exists()
+          ? JSON.parse(
+              safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
+            )
+          : "",
       },
     };
   } catch (error) {

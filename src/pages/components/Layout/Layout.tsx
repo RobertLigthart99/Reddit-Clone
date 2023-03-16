@@ -11,7 +11,7 @@ function Layout({ children }: Props) {
     <>
       <Navbar />
       <main>{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
