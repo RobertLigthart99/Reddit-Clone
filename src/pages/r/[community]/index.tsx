@@ -36,7 +36,11 @@ const CommunityPage = ({ communityData }: CommunityPageProps) => {
       <PageContent>
         <>
           <CreatePostLink />
-          <Posts communityData={communityData} />
+          <Posts
+            communityData={communityData}
+            userId={user?.uid}
+            loadingUser={loadingUser}
+          />
         </>
         <>
           <div>RHS</div>
@@ -46,29 +50,29 @@ const CommunityPage = ({ communityData }: CommunityPageProps) => {
   );
 };
 
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  // get community data and pass it to client
+  console.log("GET SERVER SIDE PROPS RUNNING");
+
   try {
     const communityDocRef = doc(
       firestore,
       "communities",
-      context.query.communityId as string
+      context.query.community as string
     );
-
     const communityDoc = await getDoc(communityDocRef);
-
     return {
       props: {
         communityData: communityDoc.exists()
           ? JSON.parse(
-              safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
+              safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() }) // needed for dates
             )
           : "",
       },
     };
   } catch (error) {
-    // could add error page here
-    console.log("getServerSideProps error", error);
+    // Could create error page here
+    console.log("getServerSideProps error - [community]", error);
   }
 }
 
