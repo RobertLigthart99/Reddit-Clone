@@ -7,7 +7,7 @@ type PageContentProps = {
 };
 
 function PageContent({ children, maxWidth }: PageContentProps) {
-  console.log("jaja", children);
+  // console.log("jaja", children);
   return (
     <Flex justify="center" p="16px 0px">
       <Flex width="95%" justify="center" maxWidth={maxWidth || "860px"}>
