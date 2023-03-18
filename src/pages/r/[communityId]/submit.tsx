@@ -10,18 +10,18 @@ import { useRecoilValue } from "recoil";
 function SubmitPostPage({}) {
   const [user] = useAuthState(auth);
   const communityStateValue = useRecoilValue(communityState);
-  console.log('COMMUNITY', communityStateValue)
+  console.log("COMMUNITY", communityStateValue);
   return (
     <PageContent>
       <>
         <Box p="14px 0px" borderBottom="1px solid" borderColor="white">
           <Text>Create a post</Text>
         </Box>
-        {user && <NewPostForm user={user} />} 
+        {user && <NewPostForm user={user} />}
       </>
       <>About</>
     </PageContent>
-  );
+  );  
 }
 
 export default SubmitPostPage;
