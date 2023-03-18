@@ -1,10 +1,10 @@
-import { Community, communityState } from "@/pages/atoms/communitiesAtom";
-import CommunityNotFound from "@/pages/components/Community/CommunityNotFound";
-import CreatePostLink from "@/pages/components/Community/CreatePostLink";
-import Header from "@/pages/components/Community/Header";
-import PageContent from "@/pages/components/Layout/PageContent";
-import Posts from "@/pages/components/Posts/Posts";
-import { firestore } from "@/pages/firebase/clientApp";
+import { Community, communityState } from "@/atoms/communitiesAtom";
+import CommunityNotFound from "@/components/Community/CommunityNotFound";
+import CreatePostLink from "@/components/Community/CreatePostLink";
+import Header from "@/components/Community/Header";
+import PageContent from "@/components/Layout/PageContent";
+import Posts from "@/components/Posts/Posts";
+import { firestore } from "@/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext } from "next";
 import React, { useEffect } from "react";

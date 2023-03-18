@@ -1,7 +1,7 @@
-import { Community } from "@/pages/atoms/communitiesAtom";
-import { Post } from "@/pages/atoms/postsAtom";
-import { auth, firestore } from "@/pages/firebase/clientApp";
-import usePosts from "@/pages/hooks/usePosts";
+import { Community } from "@/atoms/communitiesAtom";
+import { Post } from "@/atoms/postsAtom";
+import { auth, firestore } from "@/firebase/clientApp";
+import usePosts from "@/hooks/usePosts";
 import { Stack } from "@chakra-ui/react";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";

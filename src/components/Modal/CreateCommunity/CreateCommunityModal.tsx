@@ -1,4 +1,4 @@
-import { auth, firestore } from "@/pages/firebase/clientApp";
+import { auth, firestore } from "@/firebase/clientApp";
 import {
   Button,
   Modal,

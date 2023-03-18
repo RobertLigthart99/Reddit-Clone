@@ -1,9 +1,9 @@
-import { Community } from "@/pages/atoms/communitiesAtom";
+import { Community } from "@/atoms/communitiesAtom";
 import { Box, Button, Flex, Icon, Text } from "@chakra-ui/react";
 import { FaReddit } from "react-icons/fa";
 import React, { useState } from "react";
 import Image from "next/image";
-import useCommunityData from "@/pages/hooks/useCommunityData";
+import useCommunityData from "@/hooks/useCommunityData";
 
 type HeaderProps = {
   communityData: Community;

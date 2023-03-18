@@ -1,4 +1,4 @@
-import { auth } from "@/pages/firebase/clientApp";
+import { auth } from "@/firebase/clientApp";
 import { Flex, Image } from "@chakra-ui/react";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";

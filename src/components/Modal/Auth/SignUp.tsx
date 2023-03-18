@@ -1,13 +1,13 @@
-import { authModalState } from "@/pages/atoms/authModalAtom";
+import { authModalState } from "@/atoms/authModalAtom";
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth, firestore } from "@/pages/firebase/clientApp";
+import { auth, firestore } from "@/firebase/clientApp";
 import { FIREBASE_ERRORS } from "../../../firebase/errors";
 import { User } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
-import { createUserDocument } from "../../../../../functions/src";
+import { createUserDocument } from "../../../../functions/src";
 
 type Props = {};
 

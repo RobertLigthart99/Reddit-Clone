@@ -1,5 +1,5 @@
-import { authModalState } from "@/pages/atoms/authModalAtom";
-import { auth } from "@/pages/firebase/clientApp";
+import { authModalState } from "@/atoms/authModalAtom";
+import { auth } from "@/firebase/clientApp";
 import {
   useDisclosure,
   Button,

@@ -1,4 +1,4 @@
-import { Post } from "@/pages/atoms/postsAtom";
+import { Post } from "@/atoms/postsAtom";
 import React, { useState } from "react";
 import {
   IoArrowDownCircleOutline,

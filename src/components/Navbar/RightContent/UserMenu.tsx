@@ -18,10 +18,10 @@ import { VscAccount } from "react-icons/vsc";
 import { IoSparkles } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogin } from "react-icons/md";
-import { auth } from "@/pages/firebase/clientApp";
-import { authModalState } from "@/pages/atoms/authModalAtom";
+import { auth } from "@/firebase/clientApp";
+import { authModalState } from "@/atoms/authModalAtom";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
-import { communityState } from "@/pages/atoms/communitiesAtom";
+import { communityState } from "@/atoms/communitiesAtom";
 
 type UserMenuProps = {
   user?: User | null;

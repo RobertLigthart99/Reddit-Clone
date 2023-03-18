@@ -18,7 +18,7 @@ import { ValueOf } from "next/dist/shared/lib/constants";
 import loadConfig from "next/dist/server/config";
 import ImageUpload from "./PostForm/ImageUpload";
 import { EmailAuthCredential, User } from "firebase/auth";
-import { Post } from "@/pages/atoms/postsAtom";
+import { Post } from "@/atoms/postsAtom";
 import { useRouter } from "next/router";
 import {
   addDoc,
@@ -27,7 +27,7 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import { firestore, storage } from "@/pages/firebase/clientApp";
+import { firestore, storage } from "@/firebase/clientApp";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 type NewPostFormProps = {
