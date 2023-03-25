@@ -2,12 +2,15 @@ import { async } from "@firebase/util";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   writeBatch,
 } from "firebase/firestore";
 import { backIn } from "framer-motion";
+import { relativeTimeRounding } from "moment";
 import { Baloo_Chettan_2, Preahvihear } from "next/font/google";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { MdBatchPrediction } from "react-icons/md";
@@ -23,6 +26,7 @@ import { auth, firestore } from "../firebase/clientApp";
 
 const useCommunityData = () => {
   const [user] = useAuthState(auth);
+  const router = useRouter();
   const [communityStateValue, setCommunityStateValue] =
     useRecoilState(communityState);
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -143,10 +147,41 @@ const useCommunityData = () => {
     setLoading(false);
   };
 
+  const getCommuniyData = async (communityId: string) => {
+    try {
+      const communityDocRef = doc(firestore, "communities", communityId);
+      const communityDoc = await getDoc(communityDocRef);
+
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        currentCommunity: {
+          id: communityDoc.id,
+          ...communityDoc.data(),
+        } as Community,
+      }));
+    } catch (error: any) {
+      console.log("getCommunityData", error);
+    }
+  };
+
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [],
+      }));
+      return;
+    }
     getMySnippets();
   }, [user]);
+
+  useEffect(() => {
+    const { community } = router.query;
+
+    if (community && !communityStateValue.currentCommunity) {
+      getCommuniyData(community as string);
+    }
+  }, [router.query, communityStateValue.currentCommunity]);
 
   return {
     communityStateValue,

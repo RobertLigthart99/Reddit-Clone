@@ -1,8 +1,8 @@
-import { Community } from "@/atoms/communitiesAtom";
-import { Box, Button, Flex, Icon, Text } from "@chakra-ui/react";
+import { Community, communityState } from "@/atoms/communitiesAtom";
+import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
 import { FaReddit } from "react-icons/fa";
 import React, { useState } from "react";
-import Image from "next/image";
+Image;
 import useCommunityData from "@/hooks/useCommunityData";
 
 type HeaderProps = {
@@ -10,19 +10,26 @@ type HeaderProps = {
 };
 
 function Header({ communityData }: HeaderProps) {
-  const { communityStateValue, joinCommunity, leaveCommunity, onJoinOrLeaveCommunity, loading } =
-    useCommunityData();
-  const isJoined = !!communityStateValue.mySnippets.find(item => item.communityId === communityData.id);
+  const {
+    communityStateValue,
+    joinCommunity,
+    leaveCommunity,
+    onJoinOrLeaveCommunity,
+    loading,
+  } = useCommunityData();
+  const isJoined = !!communityStateValue.mySnippets.find(
+    (item) => item.communityId === communityData.id
+  );
   return (
     <Flex direction="column" width="100%" height="146px">
       <Box height="50%" bg="blue.400" />
       <Flex justify="center" bg="white" flexGrow={1}>
         <Flex width="95%" maxWidth="860px">
-          {communityData.imageURL ? (
+          {communityStateValue.currentCommunity?.imageURL ? (
             <Image
-              //   borderRadius="full"
+              borderRadius="full"
               boxSize="66px"
-              //   src={communityStateValue.currentCommunity.imageURL}
+              src={communityStateValue.currentCommunity.imageURL}
               alt="Dan Abramov"
               position="relative"
               top={-3}

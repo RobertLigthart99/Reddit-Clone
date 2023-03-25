@@ -29,6 +29,7 @@ import {
 } from "firebase/firestore";
 import { firestore, storage } from "@/firebase/clientApp";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import useSelectFile from "@/hooks/useSelectFile";
 
 type NewPostFormProps = {
   user: User;
@@ -69,17 +70,18 @@ function NewPostForm({ user }: NewPostFormProps) {
     title: "",
     body: "",
   });
-  const [selectedFile, setSelectedFile] = useState<string>();
+
+  const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const handelCreatePost = async () => {
     // create new post object => type Post
 
-    const { communityId } = router.query;
+    const { community } = router.query;
 
     const newPost: Post = {
-      communityId: communityId as string,
+      communityId: community as string,
       creatorId: user?.uid,
       creatorDisplayName: user.email!.split("@")[0],
       title: textInputs.title,
@@ -115,20 +117,6 @@ function NewPostForm({ user }: NewPostFormProps) {
     setLoading(false);
 
     //redirect the user back to the communityPage using the router
-  };
-
-  const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-
-    if (event.target.files?.[0]) {
-      reader.readAsDataURL(event.target.files[0]);
-    }
-
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target.result as string);
-      }
-    };
   };
 
   const onTextChange = (
@@ -168,7 +156,7 @@ function NewPostForm({ user }: NewPostFormProps) {
         {selectedTab === "Images & Video" && (
           <ImageUpload
             selectedFile={selectedFile}
-            onSelectImage={onSelectImage}
+            onSelectImage={onSelectFile}
             setSelectedTab={setSelectedTab}
             setSelectedFile={setSelectedFile}
           />

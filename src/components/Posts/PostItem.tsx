@@ -23,14 +23,24 @@ import {
   AlertIcon,
 } from "@chakra-ui/react";
 import moment from "moment";
+import { eventNames } from "process";
+import { useRouter } from "next/router";
 
 type PostItemProps = {
   post: Post;
   userIsCreator: boolean;
   userVoteValue?: number;
-  onVote: () => {};
-  onDeletePost: (post: Post) => Promise<boolean>;
-  onSelectPost: () => {};
+  onVote: (
+    event: React.MouseEvent<SVGAElement, MouseEvent>,
+    post: Post,
+    vote: number,
+    communityId: string
+  ) => void;
+  onDeletePost: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    post: Post
+  ) => Promise<boolean>;
+  onSelectPost?: (post: Post) => void;
 };
 
 function PostItem({
@@ -43,9 +53,15 @@ function PostItem({
 }: PostItemProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const router = useRouter();
+  const singlePostPage = !onSelectPost;
+
   const [error, setError] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = async (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
     setLoadingDelete(true);
     try {
       const success = await onDeletePost(post);
@@ -53,6 +69,9 @@ function PostItem({
       if (!success) throw new Error("Failed to delete post");
 
       console.log("post was succesfully deleted");
+      if (singlePostPage) {
+        router.push(`/r/${post.communityId}`);
+      }
       setLoadingDelete(true);
     } catch (error: any) {
       console.log("Error deleting post", error.message);
@@ -67,19 +86,19 @@ function PostItem({
     <Flex
       border="1px solid"
       bg="white"
-      borderColor="gray.300"
-      borderRadius={4}
-      _hover={{ borderColor: "gray.500" }}
-      cursor="poiner"
-      onClick={onSelectPost}
+      borderColor={singlePostPage ? "white" : "gray.300"}
+      borderRadius={singlePostPage ? "4px 4px 0 0" : "4px"}
+      _hover={{ borderColor: singlePostPage ? "none" : "gray.500" }}
+      cursor={singlePostPage ? "unset" : "pointer"}
+      onClick={() => onSelectPost && onSelectPost(post)}
     >
       <Flex
         direction="column"
         align="center"
-        bg="gray.100"
+        bg={singlePostPage ? "none" : "gray.100"}
         p={2}
         width="40px"
-        borderRadius={4}
+        borderRadius={singlePostPage ? "0" : "3px 0 0 0"}
       >
         <Icon
           as={
@@ -87,12 +106,10 @@ function PostItem({
           }
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           fontSize={22}
-          onClick={onVote}
+          onClick={(event) => onVote(event, post, 1, post.communityId)}
           cursor="poiner"
         />
-        <Text fontSize={22} onClick={onVote}>
-          {post.voteStatus}
-        </Text>
+        <Text fontSize={22}>{post.voteStatus}</Text>
         <Icon
           as={
             userVoteValue === -1
@@ -101,7 +118,7 @@ function PostItem({
           }
           color={userVoteValue === 1 ? "#4379ff" : "gray.400"}
           fontSize={22}
-          onClick={onVote}
+          onClick={(event) => onVote(event, post, -1, post.communityId)}
           cursor="poiner"
         />
       </Flex>

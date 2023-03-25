@@ -28,12 +28,10 @@ type UserMenuProps = {
 };
 
 const UserMenu = ({ user }: UserMenuProps) => {
-  const resetCommunityState = useResetRecoilState(communityState);
   const setAuthModalState = useSetRecoilState(authModalState);
 
   const logout = async () => {
     await signOut(auth);
-    resetCommunityState();
     // clear community state;
   };
 

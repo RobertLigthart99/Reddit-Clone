@@ -1,4 +1,5 @@
 import { Community, communityState } from "@/atoms/communitiesAtom";
+import About from "@/components/Community/About";
 import CommunityNotFound from "@/components/Community/CommunityNotFound";
 import CreatePostLink from "@/components/Community/CreatePostLink";
 import Header from "@/components/Community/Header";
@@ -36,14 +37,10 @@ const CommunityPage = ({ communityData }: CommunityPageProps) => {
       <PageContent>
         <>
           <CreatePostLink />
-          <Posts
-            communityData={communityData}
-            userId={user?.uid}
-            loadingUser={loadingUser}
-          />
+          <Posts communityData={communityData} />
         </>
         <>
-          <div>RHS</div>
+        <About communityData={communityData}/>
         </>
       </PageContent>
     </>
