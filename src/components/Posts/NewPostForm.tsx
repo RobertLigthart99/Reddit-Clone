@@ -48,16 +48,11 @@ export type TabItem = {
 };
 
 type NewPostFormProps = {
-  communityId: string;
   user: User;
   communityImageURL?: string;
 };
 
-function NewPostForm({
-  communityId,
-  user,
-  communityImageURL,
-}: NewPostFormProps) {
+function NewPostForm({ user, communityImageURL }: NewPostFormProps) {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({

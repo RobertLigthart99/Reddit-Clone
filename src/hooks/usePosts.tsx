@@ -160,7 +160,7 @@ const usePosts = () => {
       }
 
       // delete post document from firestore
-      const postDocRef = doc(firestore, "posts", post.id);
+      const postDocRef = doc(firestore, "posts", post.id!);
       await deleteDoc(postDocRef);
 
       //update recoil state
