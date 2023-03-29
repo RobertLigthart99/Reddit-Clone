@@ -35,7 +35,7 @@ function Navbar({}: Props) {
       </Flex>
 
       {user && <Directory />}
-      <SearchInput user={user} />
+      <SearchInput />
       <RightContent user={user} />
     </Flex>
   );
