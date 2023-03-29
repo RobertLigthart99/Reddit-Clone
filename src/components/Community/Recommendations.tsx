@@ -113,6 +113,7 @@ function Recommendations() {
                             boxSize="28px"
                             src={item.imageURL}
                             mr={2}
+                            alt={item.alt}
                           />
                         ) : (
                           <Icon

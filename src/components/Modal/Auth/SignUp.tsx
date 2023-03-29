@@ -35,7 +35,6 @@ const SignUp = () => {
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // udpate form state
-
     setSignUpForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
@@ -54,6 +53,7 @@ const SignUp = () => {
       }
     }, [userCred]);
   };
+
 
   return (
     <form onSubmit={onSubmit}>
@@ -146,6 +146,6 @@ const SignUp = () => {
       </Flex>
     </form>
   );
-}
+};
 
 export default SignUp;
