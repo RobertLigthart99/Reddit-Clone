@@ -1,41 +1,36 @@
 import { Post } from "@/atoms/postsAtom";
+import {
+  Alert,
+  AlertIcon, Flex,
+  Icon, Image, Spinner, Stack,
+  Text
+} from "@chakra-ui/react";
+import moment from "moment";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { AiOutlineDelete } from "react-icons/ai";
+import { BsChat, BsDot } from "react-icons/bs";
+import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
   IoArrowRedoOutline,
   IoArrowUpCircleOutline,
   IoArrowUpCircleSharp,
-  IoBookmarkOutline,
+  IoBookmarkOutline
 } from "react-icons/io5";
-import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat, BsDot } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
-import {
-  Flex,
-  Icon,
-  Stack,
-  Text,
-  Image,
-  Skeleton,
-  Spinner,
-  Alert,
-  AlertIcon,
-} from "@chakra-ui/react";
-import moment from "moment";
-import { eventNames } from "process";
-import { useRouter } from "next/router";
-import Link from "next/link";
 
 type PostItemProps = {
   post: Post;
   userIsCreator: boolean;
   userVoteValue?: number;
   onVote: (
-    event: React.MouseEvent<SVGAElement, MouseEvent>,
+    event: React.MouseEvent<SVGElement, MouseEvent>,
     post: Post,
     vote: number,
-    communityId: string
+    communityId: string,
+    postIdx?: number
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost?: (post: Post) => void;
