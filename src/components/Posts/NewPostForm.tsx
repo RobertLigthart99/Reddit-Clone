@@ -1,25 +1,8 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-  Icon,
-  Text,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
-import { BsLink45Deg, BsMic } from "react-icons/bs";
-import { IoDocumentText, IoImageOutline } from "react-icons/io5";
-import { BiPoll } from "react-icons/bi";
-import Tabitem from "./Tabitem";
-import { async } from "@firebase/util";
-import TextInputs from "./PostForm/TextInputs";
-import { ValueOf } from "next/dist/shared/lib/constants";
-import loadConfig from "next/dist/server/config";
-import ImageUpload from "./PostForm/ImageUpload";
-import { EmailAuthCredential, User } from "firebase/auth";
 import { Post } from "@/atoms/postsAtom";
-import { useRouter } from "next/router";
+import { firestore, storage } from "@/firebase/clientApp";
+import useSelectFile from "@/hooks/useSelectFile";
+import { Alert, AlertIcon, Flex, Icon, Text } from "@chakra-ui/react";
+import { User } from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -27,14 +10,15 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import { firestore, storage } from "@/firebase/clientApp";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import useSelectFile from "@/hooks/useSelectFile";
-
-type NewPostFormProps = {
-  user: User;
-  communityImageURL?: string;
-};
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { BiPoll } from "react-icons/bi";
+import { BsLink45Deg, BsMic } from "react-icons/bs";
+import { IoDocumentText, IoImageOutline } from "react-icons/io5";
+import ImageUpload from "./PostForm/ImageUpload";
+import TextInputs from "./PostForm/TextInputs";
+import Tabitem from "./Tabitem";
 
 const formTabs: TabItem[] = [
   {
@@ -58,13 +42,22 @@ const formTabs: TabItem[] = [
     icon: BsMic,
   },
 ];
-
 export type TabItem = {
   title: string;
   icon: typeof Icon.arguments;
 };
 
-function NewPostForm({ user, communityImageURL }: NewPostFormProps) {
+type NewPostFormProps = {
+  communityId: string;
+  user: User;
+  communityImageURL?: string;
+};
+
+function NewPostForm({
+  communityId,
+  user,
+  communityImageURL,
+}: NewPostFormProps) {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
@@ -78,9 +71,7 @@ function NewPostForm({ user, communityImageURL }: NewPostFormProps) {
 
   const handelCreatePost = async () => {
     // create new post object => type Post
-
     const { communityId } = router.query;
-
     const newPost: Post = {
       communityId: communityId as string,
       communityImageURL: communityImageURL || "",
@@ -93,11 +84,10 @@ function NewPostForm({ user, communityImageURL }: NewPostFormProps) {
       createdAt: serverTimestamp() as Timestamp,
     };
 
-    // store the post in db
-
-    setLoading(true);
-
     try {
+      setLoading(true);
+
+      // store the post in db
       const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
 
       // check for selectedFile
@@ -115,9 +105,7 @@ function NewPostForm({ user, communityImageURL }: NewPostFormProps) {
       console.log("handleCreatePost error", error.message);
       setError(true);
     }
-
     setLoading(false);
-
     //redirect the user back to the communityPage using the router
   };
 

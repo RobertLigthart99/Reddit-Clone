@@ -1,20 +1,20 @@
-import { authModalState } from "@/atoms/authModalAtom";
-import { communityState } from "@/atoms/communitiesAtom";
 import {
   collection,
   deleteDoc,
   doc,
   getDocs,
+
   query,
   where,
-  writeBatch,
+  writeBatch
 } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { updatePostfix } from "typescript";
+import { authModalState } from "../atoms/authModalAtom";
+import { communityState } from "../atoms/communitiesAtom";
 import { Post, postState, PostVote } from "../atoms/postsAtom";
 import { auth, firestore, storage } from "../firebase/clientApp";
 
@@ -160,7 +160,6 @@ const usePosts = () => {
       }
 
       // delete post document from firestore
-
       const postDocRef = doc(firestore, "posts", post.id);
       await deleteDoc(postDocRef);
 
