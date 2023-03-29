@@ -9,9 +9,7 @@ import { User } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { createUserDocument } from "../../../../functions/src";
 
-type Props = {};
-
-function SignUp({}: Props) {
+const SignUp = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
   const [signUpForm, setSignUpForm] = useState({
     email: "",

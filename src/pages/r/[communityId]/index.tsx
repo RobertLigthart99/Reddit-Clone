@@ -7,16 +7,16 @@ import PageContent from "@/components/Layout/PageContent";
 import Posts from "@/components/Posts/Posts";
 import { firestore } from "@/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import safeJsonStringify from "safe-json-stringify";
 
-type CommunityPageProps = {
+interface CommunityPageProps {
   communityData: Community;
-};
+}
 
-const CommunityPage = ({ communityData }: CommunityPageProps) => {
+const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
   console.log("here is data", communityData); // missing a lot of data like shown here (only have ID) https://youtu.be/rDAdcZ2KdNg?t=3663
   const setCommunityStateValue = useSetRecoilState(communityState);
 
