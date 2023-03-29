@@ -20,10 +20,6 @@ const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
   console.log("here is data", communityData); // missing a lot of data like shown here (only have ID) https://youtu.be/rDAdcZ2KdNg?t=3663
   const setCommunityStateValue = useSetRecoilState(communityState);
 
-  if (!communityData) {
-    return <CommunityNotFound />;
-  }
-
   useEffect(() => {
     setCommunityStateValue((prev) => ({
       ...prev,
@@ -31,6 +27,9 @@ const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
     }));
   }, [communityData]);
 
+  if (!communityData) {
+    return <CommunityNotFound />;
+  }
   return (
     <>
       <Header communityData={communityData} />
@@ -40,13 +39,12 @@ const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
           <Posts communityData={communityData} />
         </>
         <>
-        <About communityData={communityData}/>
+          <About communityData={communityData} />
         </>
       </PageContent>
     </>
   );
 };
-
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   console.log("GET SERVER SIDE PROPS RUNNING");
