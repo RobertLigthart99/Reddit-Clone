@@ -29,7 +29,7 @@ const CommunityPage = ({ communityData }: CommunityPageProps) => {
       ...prev,
       currentCommunity: communityData,
     }));
-  }, []);
+  }, [communityData]);
 
   return (
     <>
@@ -55,7 +55,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const communityDocRef = doc(
       firestore,
       "communities",
-      context.query.community as string
+      context.query.communityId as string
     );
     const communityDoc = await getDoc(communityDocRef);
     return {

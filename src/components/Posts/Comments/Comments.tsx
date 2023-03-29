@@ -9,7 +9,19 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
-import { writeBatch, doc, collection, serverTimestamp, Timestamp, increment, query, where, orderBy, getDocs } from "firebase/firestore";
+import {
+  writeBatch,
+  doc,
+  collection,
+  serverTimestamp,
+  Timestamp,
+  increment,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  Firestore,
+} from "firebase/firestore";
 
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -28,6 +40,7 @@ const Comments = ({ user, selectedPost, communityId }: CommentsProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
+  const [loadingDeleteId, setLoadingDeleteId] = useState("");
   const setPostState = useSetRecoilState(postState);
 
   const onCreateComment = async () => {
@@ -53,15 +66,14 @@ const Comments = ({ user, selectedPost, communityId }: CommentsProps) => {
       newComment.createdAt = { seconds: Date.now() / 1000 } as Timestamp;
 
       // update post numberOfComments +1
-
       const postDocRef = doc(firestore, "posts", selectedPost?.id!);
       batch.update(postDocRef, {
         numberOfComments: increment(1),
       });
 
       await batch.commit();
-      // update client recoil state
 
+      // update client recoil state
       setCommentText("");
       setComments((prev) => [newComment, ...prev]);
       setPostState((prev) => ({
@@ -77,10 +89,37 @@ const Comments = ({ user, selectedPost, communityId }: CommentsProps) => {
     setCreateLoading(false);
   };
 
-  const onDeleteComment = async (comment: any) => {
-    /// delete a comment document
-    // update post numberOfComments -1
-    // update client recoil state
+  const onDeleteComment = async (comment: Comment) => {
+    setLoadingDeleteId(comment.id);
+    try {
+      const batch = writeBatch(firestore);
+
+      /// delete a comment document
+      const commentDocRef = doc(firestore, "comments", comment.id);
+      batch.delete(commentDocRef);
+
+      // update post numberOfComments -1
+      const postDocRef = doc(firestore, "posts", selectedPost?.id!);
+      batch.update(postDocRef, {
+        numberOfContents: increment(-1),
+      });
+
+      await batch.commit();
+
+      // update client recoil state
+      setPostState((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...prev.selectedPost,
+          numberOfComments: prev.selectedPost?.numberOfComments! - 1,
+        } as Post,
+      }));
+
+      setComments((prev) => prev.filter((item) => item.id !== comment.id));
+    } catch (error: any) {
+      console.log("ondeletecomment error", error);
+    }
+    setLoadingDeleteId("");
   };
 
   const getPostComments = async () => {
@@ -103,8 +142,9 @@ const Comments = ({ user, selectedPost, communityId }: CommentsProps) => {
   };
 
   useEffect(() => {
+    if (!selectedPost) return;
     getPostComments();
-  }, []);
+  }, [selectedPost]);
 
   return (
     <Box bg="white" borderRadius="0 0 4px 4px" p={2}>
@@ -117,13 +157,15 @@ const Comments = ({ user, selectedPost, communityId }: CommentsProps) => {
         width="100%"
       >
         {/* CommentInput */}
-        <CommentInput
-          commentText={commentText}
-          setCommentText={setCommentText}
-          user={user}
-          createLoading={createLoading}
-          onCreateComment={onCreateComment}
-        />
+        {!fetchLoading && (
+          <CommentInput
+            commentText={commentText}
+            setCommentText={setCommentText}
+            user={user}
+            createLoading={createLoading}
+            onCreateComment={onCreateComment}
+          />
+        )}
       </Flex>
 
       <Stack spacing={6} p={2}>
@@ -158,9 +200,10 @@ const Comments = ({ user, selectedPost, communityId }: CommentsProps) => {
                 {" "}
                 {comments.map((comment) => (
                   <CommentItem
+                    key={comment.id}
                     comment={comment}
                     onDeleteComment={onDeleteComment}
-                    loadingDelete={false}
+                    loadingDelete={loadingDeleteId === comment.id}
                     userId={user.uid}
                   />
                 ))}
@@ -171,6 +214,6 @@ const Comments = ({ user, selectedPost, communityId }: CommentsProps) => {
       </Stack>
     </Box>
   );
-}
+};
 
 export default Comments;

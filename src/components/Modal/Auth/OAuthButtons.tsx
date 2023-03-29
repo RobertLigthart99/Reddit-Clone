@@ -3,12 +3,17 @@ import { Button, Flex, Image, Text } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import React, { useEffect } from "react";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import {
+  useSignInWithGoogle,
+  useSignInWithTwitter,
+} from "react-firebase-hooks/auth";
 
 type OAuthButtonsProps = {};
 
 const OAuthButtons: React.FC<OAuthButtonsProps> = () => {
-  const [signInWithGoogle, userCred, loading, error] = useSignInWithGoogle(auth);
+  const [signInWithGoogle, userCred, loading, error] =
+    useSignInWithGoogle(auth);
+  const [signInWithTwitter] = useSignInWithTwitter(auth);
 
   const createUserDocument = async (user: User) => {
     const userDocRef = doc(firestore, "users", user.uid);
@@ -21,6 +26,7 @@ const OAuthButtons: React.FC<OAuthButtonsProps> = () => {
     }
   }, [userCred]);
 
+
   return (
     <Flex direction="column" width="100%" mb={4}>
       <Button
@@ -29,10 +35,13 @@ const OAuthButtons: React.FC<OAuthButtonsProps> = () => {
         onClick={() => signInWithGoogle()}
         isLoading={loading}
       >
-        <Image src="/images/googlelogo.png" height="20px" />
+        <Image src="/images/googlelogo.png" height="20px" mr={2} />
         Continue with Google
       </Button>
-      <Button variant="oauth">Continue with Twitter</Button>
+      <Button variant="oauth" onClick={() => signInWithTwitter()}>
+        <Image src="/images/twitter-icon.png" height="20px" mr={2} />
+        Continue with Twitter
+      </Button>
       {error && <Text>{error.message}</Text>}
     </Flex>
   );

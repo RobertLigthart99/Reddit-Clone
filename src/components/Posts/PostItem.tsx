@@ -25,6 +25,7 @@ import {
 import moment from "moment";
 import { eventNames } from "process";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 type PostItemProps = {
   post: Post;
@@ -36,11 +37,9 @@ type PostItemProps = {
     vote: number,
     communityId: string
   ) => void;
-  onDeletePost: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    post: Post
-  ) => Promise<boolean>;
+  onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost?: (post: Post) => void;
+  homePage?: boolean;
 };
 
 function PostItem({
@@ -50,6 +49,7 @@ function PostItem({
   onVote,
   onDeletePost,
   onSelectPost,
+  homePage,
 }: PostItemProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -132,6 +132,29 @@ function PostItem({
         <Stack spacing={1} p="10px">
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
             {/* Home Page Check */}
+
+            {homePage && (
+              <>
+                {post.communityImageURL ? (
+                  <Image
+                    src={post.communityImageURL}
+                    borderRadius="full"
+                    boxSize="18px"
+                    mr={2}
+                  />
+                ) : (
+                  <Icon as={FaReddit} fontSize="18pt" mr={1} color="blue.500" />
+                )}
+                <Link href={`/r/${post.communityId}`}>
+                  <Text
+                    fontWeight={700}
+                    _hover={{ textDecoration: "underline" }}
+                    onClick={event => event.stopPropagation()}
+                  >{`/r/${post.communityId}`}</Text>
+                </Link>
+                <Icon as={BsDot} color="gray.500" fontSize={8} />
+              </>
+            )}
 
             <Text>
               Posted by u/{post.creatorDisplayName}{" "}
